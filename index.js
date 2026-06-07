@@ -1,4 +1,6 @@
 require('dotenv').config();
+// Force Vercel to bundle the pg package (Sequelize loads it dynamically)
+require('pg');
 const express = require('express');
 const cors = require('cors');
 const { sequelize } = require('./models');
