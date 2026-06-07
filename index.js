@@ -49,19 +49,22 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Сталася неочікувана помилка на сервері' });
 });
 
-// Перевірка з'єднання з БД та запуск сервера
-const startServer = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log('З\'єднання з базою даних PostgreSQL успішно встановлено.');
-    
-    app.listen(PORT, () => {
-      console.log(`Сервер бекенду запущено на порту ${PORT}`);
-    });
-  } catch (error) {
-    console.error('Неможливо з\'єднатися з базою даних:', error);
-    process.exit(1);
-  }
-};
+// Перевірка з'єднання з БД та запуск сервера (тільки якщо не на Vercel)
+if (!process.env.VERCEL) {
+  const startServer = async () => {
+    try {
+      await sequelize.authenticate();
+      console.log('З\'єднання з базою даних PostgreSQL успішно встановлено.');
+      
+      app.listen(PORT, () => {
+        console.log(`Сервер бекенду запущено на порту ${PORT}`);
+      });
+    } catch (error) {
+      console.error('Неможливо з\'єднатися з базою даних:', error);
+      process.exit(1);
+    }
+  };
+  startServer();
+}
 
-startServer();
+module.exports = app;
