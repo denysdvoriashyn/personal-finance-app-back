@@ -16,7 +16,10 @@ const PORT = process.env.PORT || 5000;
 
 // Мідлвари
 app.use(cors({
-  origin: '*', // Для простоти підключення локального фронтенду
+  origin: (origin, callback) => {
+    // Dynamically allow any origin to satisfy CORS with credentials enabled
+    callback(null, true);
+  },
   credentials: true
 }));
 app.use(express.json());
